@@ -1,7 +1,7 @@
 Package: tidytypes
 Type: Package
 Title: Functions to Download Type Strain Names
-Version: 0.1.0
+Version: 0.0.0.9000
 Author: Stijn Wittouck (wittouck_stijn@hotmail.com)
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
