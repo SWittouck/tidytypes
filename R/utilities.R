@@ -33,3 +33,28 @@ summarize_names <- function(names) {
     ungroup()
 
 }
+
+genbank_sequence <- function(accession, max_attempts = 3) {
+
+  fasta <- NULL
+  attempt <- 1
+
+  while(is.null(fasta) && attempt <= max_attempts) {
+
+    print(paste0("attempt ", attempt))
+
+    try ({
+
+      search_res <- rentrez::entrez_search(db = "nucleotide", term = accession)
+      fasta <- rentrez::entrez_fetch(db = "nucleotide", id = search_res$ids, rettype = "fasta")
+
+    })
+
+    attempt <- attempt + 1
+
+  }
+
+  fasta %>%
+    str_remove(">.*\n")
+
+}
