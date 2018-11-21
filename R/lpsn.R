@@ -16,6 +16,13 @@ lpsn_names_one_genus <- function(genus) {
     str_squish() %>%
     purrr::keep(~ . != "")
 
+  if (lines[[1]] == "File not found") {
+
+    warning(glue("genus {genus} not found"), call. = F)
+    return(NULL)
+
+  }
+
   species_lines <-
     which(str_detect(lines, paste0("^", genus_cap)))
   lines_no_intro <-
@@ -27,7 +34,7 @@ lpsn_names_one_genus <- function(genus) {
     tibble(line = lines_no_intro, name_id = rep(1:length(reps), times = reps)) %>%
     mutate_at("line", str_replace, paste0("^", genus_cap), paste0("name:", genus_cap)) %>%
     mutate_at("line", str_replace, "→ ¤.*", "moved_to:") %>%
-    tidyr::separate("line", into = c("field", "value"), sep = ":", extra = "merge") %>%
+    tidyr::separate("line", into = c("field", "value"), sep = ":", extra = "merge", fill = "right") %>%
     mutate_at("field", str_replace, "Sequence accession no\\..*", "type_amplicon") %>%
     mutate_at("field", str_replace, "Type strain", "type_strain_name") %>%
     filter(field %in% c("name", "type_strain_name", "type_amplicon", "moved_to")) %>%
@@ -55,11 +62,7 @@ lpsn_names_one_genus <- function(genus) {
     group_by(name) %>%
     slice(1) %>%
     ungroup() %>%
-    # group_by(species) %>%
-    # mutate(has_subspecies = any(! is.na(subspecies))) %>%
-    # ungroup() %>%
-    # filter(! (has_subspecies & is.na(subspecies))) %>%
-    # select(- has_subspecies) %>%
+    mutate(species = str_extract(name, "^[^ ]+ [^ ]+")) %>%
     tidyr::separate_rows(type_strain_name, sep = "=") %>%
     mutate_at(
       "type_strain_name",
@@ -70,11 +73,12 @@ lpsn_names_one_genus <- function(genus) {
         str_remove("^StrainInfo\\.net\\)")
     ) %>%
     distinct() %>%
-    group_by(name, type_amplicon) %>%
+    group_by(name, species, type_amplicon) %>%
     summarize(type_strain_name = list(type_strain_name)) %>%
     ungroup() %>%
-    mutate(species = str_extract(name, "^[^ ]+ [^ ]+")) %>%
-    mutate_at("type_amplicon", str_extract, "[A-Z0-9]+")
+    mutate_at("type_amplicon", str_extract, "[A-Z0-9]+") %>%
+    correct_subspecies() %>%
+    summarize_names()
 
 }
 

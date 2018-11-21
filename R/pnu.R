@@ -28,6 +28,13 @@ pnu_names_one_genus <- function(genus, username, password) {
     httr::GET(auth) %>%
     httr::content()
 
+  if (! is.null(record$detail)) {
+
+    warning(glue("genus {genus} not found"), call. = F)
+    return(NULL)
+
+  }
+
   names <-
     purrr::map_chr(record$species, 1) %>%
     purrr::map(pnu_name, username, password) %>%
@@ -39,7 +46,9 @@ pnu_names_one_genus <- function(genus, username, password) {
     filter(is.na(correct_name)) %>%
     select(name = species, type_strain_name = type_strain) %>%
     mutate_at("type_strain_name", purrr::map, as.character) %>%
-    mutate(species = str_extract(name, "^[^ ]+ [^ ]+"))
+    mutate(species = str_extract(name, "^[^ ]+ [^ ]+")) %>%
+    correct_subspecies() %>%
+    summarize_names()
 
   names
 
