@@ -35,9 +35,9 @@ lpsn_names_one_genus <- function(genus) {
     mutate_at("line", str_replace, paste0("^", genus_cap), paste0("name:", genus_cap)) %>%
     mutate_at("line", str_replace, "→ ¤.*", "moved_to:") %>%
     tidyr::separate("line", into = c("field", "value"), sep = ":", extra = "merge", fill = "right") %>%
-    mutate_at("field", str_replace, "Sequence accession no\\..*", "type_amplicon") %>%
+    mutate_at("field", str_replace, "Sequence accession no\\..*", "type_sixteen_s") %>%
     mutate_at("field", str_replace, "Type strain", "type_strain_name") %>%
-    filter(field %in% c("name", "type_strain_name", "type_amplicon", "moved_to")) %>%
+    filter(field %in% c("name", "type_strain_name", "type_sixteen_s", "moved_to")) %>%
     group_by(name_id, field) %>%
     slice(1) %>%
     ungroup() %>%
@@ -54,7 +54,7 @@ lpsn_names_one_genus <- function(genus) {
     mutate(subspecies = str_extract(name, "subsp\\. [^ ]+")) %>%
     mutate(name = str_c(species, str_replace_na(subspecies, ""), sep = " ")) %>%
     mutate_at("name", str_trim) %>%
-    mutate_at("type_amplicon", ~ str_trim(.) %>% str_remove("\\.$")) %>%
+    mutate_at("type_sixteen_s", ~ str_trim(.) %>% str_remove("\\.$")) %>%
     filter(! no_longer_valid) %>%
     select(- no_longer_valid, - name_id)
 
@@ -73,10 +73,10 @@ lpsn_names_one_genus <- function(genus) {
         str_remove("^StrainInfo\\.net\\)")
     ) %>%
     distinct() %>%
-    group_by(name, species, type_amplicon) %>%
+    group_by(name, species, type_sixteen_s) %>%
     summarize(type_strain_name = list(type_strain_name)) %>%
     ungroup() %>%
-    mutate_at("type_amplicon", str_extract, "[A-Z0-9]+") %>%
+    mutate_at("type_sixteen_s", str_extract, "[A-Z0-9]+") %>%
     correct_subspecies() %>%
     summarize_names()
 

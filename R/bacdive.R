@@ -19,18 +19,6 @@ bd_name <- function(name) {
         html_node("a") %>%
         html_attr("href")
 
-      # res <- glue("https://bacdive.dsmz.de{species_url_suffix}") %>%
-      #   read_html() %>%
-      #   html_nodes("table#sequence_table") %>%
-      #   html_table(fill = T) %>%
-      #   purrr::pluck(1) %>%
-      #   set_names(c("ref", "database", "description", "accession", "length", "tax_id", "star"))
-      #
-      # res %>%
-      #   filter(str_detect(description, "16S")) %>%
-      #   pull(description)
-      #   View()
-
       text <-
         glue("https://bacdive.dsmz.de{species_url_suffix}") %>%
         read_html() %>%

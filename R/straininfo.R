@@ -33,7 +33,7 @@ si_name <- function(name) {
         str_remove(" T .*$") %>%
         purrr::when(length(.) == 0 ~ as.character(NA), ~ .)
 
-      type_amplicon <-
+      type_sixteen_s <-
         page %>%
         rvest::html_nodes("div.modulecontent") %>%
         rvest::html_nodes("table") %>%
@@ -42,7 +42,7 @@ si_name <- function(name) {
         filter(X1 == "16S rRNA gene") %>%
         pull(X2)
 
-      list(name = name, type_strain_names = type_strain_names, type_amplicon = type_amplicon)
+      list(name = name, type_strain_names = type_strain_names, type_sixteen_s = type_sixteen_s)
 
     },
 
