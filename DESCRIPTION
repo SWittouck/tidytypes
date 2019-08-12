@@ -1,10 +1,9 @@
 Package: tidytypes
 Type: Package
 Title: Functions to Download Type Strain Names
-Version: 0.0.0.9000
-Author: Stijn Wittouck (wittouck_stijn@hotmail.com)
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Version: 0.1.0
+Authors@R: c(person("Stijn", "Wittouck", email = "stijn.wittouck@uantwerpen.be", role = c("aut", "cre"))) 
+Description: A set of functions to make it easy to download type strain names for bacterial species from various websites.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
