@@ -114,9 +114,9 @@ straininfo_list_one_page <- function(genus, pagenumber) {
 
   url <- glue("http://www.straininfo.net/strains/search?typeStrain=true&taxon={genus}&includeSubtaxa=true&firstResult={first_result}")
 
-  read_html(url) %>%
-    html_nodes("li") %>%
-    keep(~ html_text(.) %>% str_detect("species name")) %>%
+  xml2::read_html(url) %>%
+    rvest::html_nodes("li") %>%
+    keep(~ rvest::html_text(.) %>% str_detect("species name")) %>%
     map(straininfo_parsed_node)
 
 }
@@ -130,9 +130,9 @@ straininfo_list_one_genus <- function(genus) {
   url_first_page <- glue("http://www.straininfo.net/strains/search?typeStrain=true&taxon={genus}&includeSubtaxa=true&firstResult=1")
 
   last_page <-
-    read_html(url_first_page) %>%
-    html_nodes("ul.pagination-clean") %>%
-    html_text() %>%
+    xml2::read_html(url_first_page) %>%
+    rvest::html_nodes("ul.pagination-clean") %>%
+    rvest::html_text() %>%
     str_squish() %>%
     nth(1) %>%
     str_extract("[^ ]+(?= next)") %>%
