@@ -77,8 +77,9 @@ lpsn_names_one_genus <- function(genus) {
     summarize(type_strain_name = list(type_strain_name)) %>%
     ungroup() %>%
     mutate_at("type_sixteen_s", str_extract, "[A-Z0-9]+") %>%
-    correct_subspecies() %>%
-    summarize_names()
+    correct_subspecies()
+    # group_by(name, species) %>%
+    # nest()
 
 }
 
