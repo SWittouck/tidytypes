@@ -33,7 +33,7 @@ lpsn_names_one_genus <- function(genus) {
   names <-
     tibble(line = lines_no_intro, name_id = rep(1:length(reps), times = reps)) %>%
     mutate_at("line", str_replace, paste0("^", genus_cap), paste0("name:", genus_cap)) %>%
-    mutate_at("line", str_replace, "→ ¤.*", "moved_to:") %>%
+    mutate_at("line", str_replace, "\u2192 \u00A4.*", "moved_to:") %>%
     tidyr::separate("line", into = c("field", "value"), sep = ":", extra = "merge", fill = "right") %>%
     mutate_at("field", str_replace, "Sequence accession no\\..*", "type_sixteen_s") %>%
     mutate_at("field", str_replace, "Type strain", "type_strain_name") %>%
